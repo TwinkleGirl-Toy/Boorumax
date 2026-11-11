@@ -1,0 +1,6 @@
+{
+  "name": "Boorusama Plus",
+  "description": "Multi-engine Booru client supporting JoyReactor (joyreactor.cc), Pawchive (pawchive.pw), Danbooru, and Gelbooru with side-by-side coexistence alongside official Boorusama.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

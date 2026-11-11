@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Boorusama Plus</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_creators">Creators &amp; Tags</string>
+    <string name="nav_saved">Bookmarks</string>
+    <string name="nav_coexistence">Coexist &amp; Sync</string>
+    <string name="search_hint">Search tags (e.g., art, sci-fi, -meme) or creator…</string>
+    <string name="coexistence_banner_title">Side-by-Side Coexistence Active</string>
+    <string name="coexistence_banner_desc">Package com.aistudio.boorusamaplus.jrpchw runs simultaneously alongside official Boorusama (com.degenk.boorusama) without conflicts.</string>
+    <string name="add_booru_profile">Add Booru Instance</string>
+    <string name="empty_bookmarks_title">No Bookmarked Posts Yet</string>
+    <string name="empty_bookmarks_desc">Tap the bookmark icon on any JoyReactor, Pawchive, Danbooru, or Gelbooru post to save it locally.</string>
+    <string name="blacklist_title">Global Tag Blacklist</string>
+    <string name="favorite_tags_title">Saved Searches &amp; Favorite Tags</string>
+</resources>
