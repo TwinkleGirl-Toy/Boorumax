@@ -142,3 +142,11 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   "ksp"(libs.moshi.kotlin.codegen)
 }
+
+tasks.register<Copy>("stageApkForGitHub") {
+  dependsOn("assembleDebug")
+  from("${rootDir}/.build-outputs/app-debug.apk")
+  into("${rootDir}/apk")
+  rename { "Boorusama-Plus-debug.apk" }
+}
+

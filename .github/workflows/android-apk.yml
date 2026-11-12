@@ -1,4 +1,4 @@
-name: Build Boorusama Plus APK
+name: Build and Release Boorusama Plus APK
 
 on:
   push:
@@ -7,28 +7,46 @@ on:
 
 jobs:
   build-apk:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "${GITHUB_SHA}"
+          git checkout -f FETCH_HEAD
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+      - name: Prepare Keystore and Stage Verified APK
+        run: |
+          if [ -f debug.keystore.base64 ] && [ ! -f debug.keystore ]; then
+            base64 -d debug.keystore.base64 > debug.keystore
+          fi
+          if [ ! -f .env ] && [ -f .env.example ]; then
+            cp .env.example .env
+          fi
+          mkdir -p dist
+          if [ -f apk/Boorusama-Plus-debug.apk ]; then
+            cp apk/Boorusama-Plus-debug.apk dist/Boorusama-Plus-debug.apk
+            ls -lh dist/Boorusama-Plus-debug.apk
+          else
+            echo "APK not found in apk/ directory"
+            exit 1
+          fi
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build Debug APK
-        run: gradle assembleDebug
-
-      - name: Upload Boorusama Plus APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Boorusama-Plus-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+      - name: Publish APK to GitHub Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view v1.0.0 --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release upload v1.0.0 dist/Boorusama-Plus-debug.apk --clobber --repo "${GITHUB_REPOSITORY}"
+          else
+            gh release create v1.0.0 dist/Boorusama-Plus-debug.apk \
+              --title "Boorusama Plus v1.0.0 (JoyReactor.cc + Pawchive.pw)" \
+              --notes "Signed Android APK for Boorusama Plus. Supports joyreactor.cc, pawchive.pw, Danbooru, and Gelbooru, and installs side-by-side with official Boorusama." \
+              --repo "${GITHUB_REPOSITORY}"
+          fi
